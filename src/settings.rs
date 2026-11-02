@@ -17,9 +17,13 @@ pub enum MetadataMode {
     /// Remove chunks that don't affect how the image is displayed (oxipng `--strip safe`).
     #[default]
     StripSafe,
-    /// Remove every non-critical chunk, including color profiles (oxipng `--strip all`).
+    /// Remove every non-critical chunk, including color profiles, but keep the animation.
+    /// (oxipng's `--strip all` would also remove that, leaving an APNG only its first frame.)
     StripAll,
 }
+
+/// The APNG chunks: the frame count, then each frame's position and delay, and its pixels.
+const ANIMATION_CHUNKS: [[u8; 4]; 3] = [*b"acTL", *b"fcTL", *b"fdAT"];
 
 impl MetadataMode {
     pub const ALL: [Self; 3] = [Self::StripSafe, Self::Keep, Self::StripAll];
@@ -151,7 +155,7 @@ impl Settings {
         opts.strip = match self.metadata {
             MetadataMode::Keep => StripChunks::None,
             MetadataMode::StripSafe => StripChunks::Safe,
-            MetadataMode::StripAll => StripChunks::All,
+            MetadataMode::StripAll => StripChunks::Keep(ANIMATION_CHUNKS.into()),
         };
         opts.interlace = match self.interlacing {
             Interlacing::Keep => None,
@@ -332,7 +336,10 @@ mod tests {
             interlacing: Interlacing::Add,
             ..Settings::default()
         };
-        assert_eq!(all.oxipng_options().strip, StripChunks::All);
+        assert_eq!(
+            all.oxipng_options().strip,
+            StripChunks::Keep(oxipng::indexset![*b"acTL", *b"fcTL", *b"fdAT"])
+        );
         assert_eq!(all.oxipng_options().interlace, Some(true));
     }
 }

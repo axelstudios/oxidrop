@@ -23,7 +23,7 @@ Changes apply to files that haven't started yet.
     count, and optionally a stop after a number of passes without a gain.
 - **Image**
   - **Metadata**: strip safe chunks (the ones that don't change how the image looks), keep
-    all, or strip all, including color profiles.
+    all, or strip all, including color profiles. Every choice keeps an animation's frames.
   - **Interlacing**: remove it (almost always smaller), keep it as is, or add it (Adam7, only
     when that doesn't make the file bigger).
   - **Optimize transparent pixels**: changes the color of fully transparent pixels, which

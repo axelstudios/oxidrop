@@ -10,7 +10,7 @@ use oxidrop::{
     convert::Source,
     optimize::optimize_path,
     png_info::{self, Change, ColorType},
-    settings::{OutputTarget, Settings},
+    settings::{MetadataMode, OutputTarget, Settings},
 };
 
 #[test]
@@ -96,6 +96,52 @@ fn apng_keeps_its_animation_and_shrinks() {
             .any(|c| c.name == "fdAT" && c.count == 2)
     );
     assert!(outcome.after.image_data < outcome.before.image_data);
+}
+
+#[test]
+fn strip_all_removes_every_chunk_but_the_animation() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("sprite.apng");
+    let apng = common::with_chunks(
+        &common::apng(48, 32, 3),
+        &[
+            // 72 dpi, which safe stripping keeps.
+            (*b"pHYs", &[0, 0, 11, 19, 0, 0, 11, 19, 1]),
+            (*b"tEXt", b"Comment\0made by the oxidrop tests"),
+        ],
+    );
+    fs::write(&path, apng).unwrap();
+    let settings = Settings {
+        metadata: MetadataMode::StripAll,
+        ..Settings::default()
+    };
+
+    let outcome = optimize_path(&path, &settings).unwrap();
+
+    assert!(outcome.replaced_original);
+    assert_eq!(outcome.after.frame_count, Some(3), "animation must survive");
+    let names: Vec<_> = outcome
+        .after
+        .chunks
+        .iter()
+        .map(|c| c.name.as_str())
+        .collect();
+    assert_eq!(names, ["IHDR", "acTL", "fcTL", "IDAT", "fdAT", "IEND"]);
+}
+
+#[test]
+fn strip_all_keeps_a_converted_gif_animated() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("spinner.gif");
+    fs::write(&path, common::moving_square_gif(160, 48, 8)).unwrap();
+    let settings = Settings {
+        metadata: MetadataMode::StripAll,
+        ..Settings::default()
+    };
+
+    let outcome = optimize_path(&path, &settings).unwrap();
+
+    assert_eq!(outcome.after.frame_count, Some(8));
 }
 
 #[test]

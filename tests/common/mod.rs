@@ -57,6 +57,18 @@ pub(crate) fn apng(width: u32, height: u32, frames: u32) -> Vec<u8> {
     out
 }
 
+/// `png` with `chunks` added right after its IHDR, where metadata usually is.
+pub(crate) fn with_chunks(png: &[u8], chunks: &[([u8; 4], &[u8])]) -> Vec<u8> {
+    // The signature, then IHDR: length, name, 13 bytes of data, and CRC.
+    let (head, rest) = png.split_at(8 + 4 + 4 + 13 + 4);
+    let mut out = head.to_vec();
+    for (name, data) in chunks {
+        write_chunk(&mut out, *name, data);
+    }
+    out.extend_from_slice(rest);
+    out
+}
+
 fn write_chunk(out: &mut Vec<u8>, name: [u8; 4], data: &[u8]) {
     out.extend_from_slice(&u32::try_from(data.len()).unwrap().to_be_bytes());
     let start = out.len();

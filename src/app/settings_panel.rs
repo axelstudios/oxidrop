@@ -77,7 +77,8 @@ impl OxidropApp {
              profile that is just standard sRGB is swapped for the small sRGB tag that means \
              the same, and that tag is dropped if the image is stored as grayscale; neither \
              changes how the image looks. Keep all leaves every chunk as it is. Strip all also \
-             removes color profiles, which can change how colors look.",
+             removes color profiles, which can change how colors look. Every choice keeps an \
+             animation's frames.",
         );
         setting_row(ui, "Interlacing", |ui, label| {
             ComboBox::from_id_salt("interlacing")
