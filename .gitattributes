@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png binary
+*.apng binary
+
+# Vendored crates stay byte for byte as published, so vendor/zopfli.patch keeps applying to fresh copies.
+vendor/** -text

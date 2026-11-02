@@ -1,0 +1,5 @@
+# The Rust release used for local builds, CI, and releases (rustup installs it on first use), so
+# a new release's lints can't fail an unchanged commit. Move it to a newer release on purpose.
+[toolchain]
+channel = "1.99.1"
+components = ["clippy", "rustfmt", "rust-src"]

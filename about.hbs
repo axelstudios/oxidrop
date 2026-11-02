@@ -1,0 +1,26 @@
+Third-party licenses
+====================
+
+Oxidrop is built from the open-source crates below. Each license text is followed by the
+crates it covers. Inter, the typeface, has its own license in Inter-LICENSE.txt.
+
+{{#each overview}}
+{{{name}}} ({{count}})
+{{/each}}
+
+{{#each licenses}}
+--------------------------------------------------------------------------------
+
+{{{name}}}, used by:
+{{#each used_by}}
+    {{crate.name}} {{crate.version}}{{#if crate.repository}} ({{crate.repository}}){{/if}}
+{{/each}}
+{{#unless source_path}}
+
+These crates don't include this license's text, so the standard text follows. Their
+repositories name their authors.
+{{/unless}}
+
+{{{text}}}
+
+{{/each}}

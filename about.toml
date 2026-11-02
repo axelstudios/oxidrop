@@ -1,0 +1,350 @@
+# cargo-about: the licenses of the crates built into Oxidrop, which the release workflow writes to
+# THIRD-PARTY-LICENSES.txt in each archive with `cargo about generate about.hbs`.
+
+# Where a crate offers a choice of licenses, the first one here that it allows is used.
+accepted = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "ISC",
+    "Unicode-3.0",
+    "Zlib",
+]
+# The release builds.
+targets = ["x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu", "aarch64-apple-darwin"]
+# Only crates built into the app: not the build scripts' or tests' dependencies, or Oxidrop itself.
+ignore-build-dependencies = true
+ignore-dev-dependencies = true
+private = { ignore = true }
+
+# Clarifications, for crates whose license files cargo-about doesn't find or recognize on its own;
+# it would use the license's standard text instead, without the copyright notice. Each names the
+# real files, in the published crate (`files`) or in its repository at the commit it was
+# published from (`git`), with their SHA-256. An entry whose files no longer match is skipped,
+# with a warning, so a crate that changes its license gets looked at again.
+#
+# Still on the standard text, all macOS only: `dispatch`, and the objc2 crates. objc2's newer
+# releases have no license text (only a LICENSE.md about their licensing), and cargo-about can't
+# tell its older releases, which have one, from the newer ones.
+
+# libdeflate-sys builds libdeflate's C code into the app, which has its own (MIT) license.
+[libdeflate-sys.clarify]
+license = "Apache-2.0 AND MIT"
+
+[[libdeflate-sys.clarify.files]]
+path = "LICENSE"
+license = "Apache-2.0"
+checksum = "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+
+[[libdeflate-sys.clarify.files]]
+path = "libdeflate/COPYING"
+license = "MIT"
+checksum = "4ad69099cb4374836fd27583d9991e2838cd86b6e4666ab26b2d32582c91e73a"
+
+# AccessKit: in its repository, with Chromium's license, which its README says covers
+# "significant portions" of it.
+
+[accesskit.clarify]
+license = "(MIT OR Apache-2.0) AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+[accesskit_atspi_common.clarify]
+license = "(MIT OR Apache-2.0) AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+[accesskit_consumer.clarify]
+license = "(MIT OR Apache-2.0) AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+[accesskit_macos.clarify]
+license = "(MIT OR Apache-2.0) AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+[accesskit_unix.clarify]
+license = "(MIT OR Apache-2.0) AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+[accesskit_windows.clarify]
+license = "(MIT OR Apache-2.0) AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+[accesskit_winit.clarify]
+license = "Apache-2.0 AND BSD-3-Clause"
+git = [
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "62c7a1e35f56406896d7aa7ca52d0cc0d272ac022b5d2796e7d6905db8a3636a" },
+    { path = "LICENSE.chromium", license = "BSD-3-Clause", checksum = "845022e0c1db1abb41a6ba4cd3c4b674ec290f3359d9d3c78ae558d4c0ed9308" },
+]
+
+# egui: in its repository. Most of its crates were published from commits that aren't on GitHub,
+# so those read the files at the release tag.
+
+[ecolor.clarify]
+license = "MIT OR Apache-2.0"
+override-git-commit = "0.37.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[eframe.clarify]
+license = "MIT OR Apache-2.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[egui.clarify]
+license = "MIT OR Apache-2.0"
+override-git-commit = "0.37.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[egui-wgpu.clarify]
+license = "MIT OR Apache-2.0"
+override-git-commit = "0.37.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[egui-winit.clarify]
+license = "MIT OR Apache-2.0"
+override-git-commit = "0.37.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[egui_extras.clarify]
+license = "MIT OR Apache-2.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[egui_system_font_provider.clarify]
+license = "MIT OR Apache-2.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[emath.clarify]
+license = "MIT OR Apache-2.0"
+override-git-commit = "0.37.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+[epaint.clarify]
+license = "MIT OR Apache-2.0"
+override-git-commit = "0.37.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "95ca92f5f8ea5231f1580b3a2a799e8260af3114b900e1def5355a7f44bcf60c" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90" },
+]
+
+# windows-rs: in each crate, in lowercase, which cargo-about doesn't look for.
+
+[windows.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-collections.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-core.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-future.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-implement.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-interface.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-link.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-numerics.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-result.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-strings.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-sys.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-targets.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows-threading.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows_x86_64_gnu.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+[windows_x86_64_msvc.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "license-mit", license = "MIT", checksum = "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383" },
+    { path = "license-apache-2.0", license = "Apache-2.0", checksum = "c16f8dcf1a368b83be78d826ea23de4079fe1b4469a0ab9ee20563f37ff3d44b" },
+]
+
+# In the crate, but not recognized: the Apache license with its appendix filled in, two licenses
+# in one file, and so on.
+
+[ab_glyph.clarify]
+license = "Apache-2.0"
+files = [
+    { path = "LICENSE", license = "Apache-2.0", checksum = "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9" },
+]
+
+[ab_glyph_rasterizer.clarify]
+license = "Apache-2.0"
+files = [
+    { path = "LICENSE", license = "Apache-2.0", checksum = "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9" },
+]
+
+[dpi.clarify]
+license = "Apache-2.0 AND MIT"
+files = [
+    { path = "LICENSE", license = "Apache-2.0", checksum = "6dc0e068dcf3a5bc8e054205b85b7720e1d49265bbc64bf515d2cf79197df69a" },
+    { path = "LICENSE-LIBM-MIT", license = "MIT", checksum = "9eff396a99bafd208e7126602420d6864f6066c08b84485a5b032320a9c01997" },
+]
+
+[libm.clarify]
+license = "MIT"
+files = [
+    { path = "LICENSE.txt", license = "MIT", checksum = "3823dda7cf046602f4b4e77ec8e227863dc4736037cc85bb33d9f19febe16bb7" },
+]
+
+[owned_ttf_parser.clarify]
+license = "Apache-2.0"
+files = [
+    { path = "LICENSE", license = "Apache-2.0", checksum = "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9" },
+]
+
+[type-map.clarify]
+license = "MIT OR Apache-2.0"
+files = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "b47fb719a40d9ef9c8e3be525c41ce129c46d613cfc96a91bddd7c19dcebf7a1" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "f70ebc7cddd5befd46ce2aa9a8782deb7b59ac9fd55e8c0e10647d1ac66cecd1" },
+]
+
+# In the repository only.
+
+[clipboard-win.clarify]
+license = "BSL-1.0"
+git = [
+    { path = "LICENSE", license = "BSL-1.0", checksum = "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566" },
+]
+
+[objc-sys.clarify]
+license = "MIT"
+git = [
+    { path = "LICENSE.txt", license = "MIT", checksum = "e353f37b12aefbb9f9b29490e837cfee05d9bda70804b3562839a3285c1df1e5" },
+]
+
+[profiling.clarify]
+license = "MIT OR Apache-2.0"
+git = [
+    { path = "LICENSE-MIT", license = "MIT", checksum = "c8167fdeeed46d3f244d3f85c5bf998ce889343691c32be2c61a8bc4b5c08333" },
+    { path = "LICENSE-APACHE", license = "Apache-2.0", checksum = "10d30a673cd5e9349bdc02aeb48f14b3386d27d0da32df8f0a555d4aa16aa551" },
+]
+
+[spirv.clarify]
+license = "Apache-2.0"
+git = [
+    { path = "LICENSE", license = "Apache-2.0", checksum = "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30" },
+]

@@ -1,0 +1,54 @@
+diff --git pristine/src/deflate.rs patched/src/deflate.rs
+index 48fb336..b404c9f 100644
+--- pristine/src/deflate.rs
++++ patched/src/deflate.rs
+@@ -171,6 +171,13 @@ impl<W: Write> Write for DeflateEncoder<W> {
+ 
+ impl<W: Write> Drop for DeflateEncoder<W> {
+     fn drop(&mut self) {
++        // Oxidrop patch: while unwinding (Oxidrop stops a file by unwinding out of the
++        // compression), finishing would compress the whole pending chunk again, and nobody
++        // wants the output. See vendor/README.md.
++        #[cfg(feature = "std")]
++        if std::thread::panicking() {
++            return;
++        }
+         self.__finish().ok();
+     }
+ }
+diff --git pristine/src/gzip.rs patched/src/gzip.rs
+index e643593..2d2deff 100644
+--- pristine/src/gzip.rs
++++ patched/src/gzip.rs
+@@ -110,6 +110,13 @@ impl<W: Write> Write for GzipEncoder<W> {
+ 
+ impl<W: Write> Drop for GzipEncoder<W> {
+     fn drop(&mut self) {
++        // Oxidrop patch: while unwinding (Oxidrop stops a file by unwinding out of the
++        // compression), finishing would compress the whole pending chunk again, and nobody
++        // wants the output. See vendor/README.md.
++        #[cfg(feature = "std")]
++        if std::thread::panicking() {
++            return;
++        }
+         self.__finish().ok();
+     }
+ }
+diff --git pristine/src/zlib.rs patched/src/zlib.rs
+index 3269e2f..6542789 100644
+--- pristine/src/zlib.rs
++++ patched/src/zlib.rs
+@@ -103,6 +103,13 @@ impl<W: Write> Write for ZlibEncoder<W> {
+ 
+ impl<W: Write> Drop for ZlibEncoder<W> {
+     fn drop(&mut self) {
++        // Oxidrop patch: while unwinding (Oxidrop stops a file by unwinding out of the
++        // compression), finishing would compress the whole pending chunk again, and nobody
++        // wants the output. See vendor/README.md.
++        #[cfg(feature = "std")]
++        if std::thread::panicking() {
++            return;
++        }
+         self.__finish().ok();
+     }
+ }

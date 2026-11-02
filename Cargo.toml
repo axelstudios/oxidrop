@@ -1,0 +1,100 @@
+[package]
+name = "oxidrop"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+description = "Drag-and-drop PNG/APNG optimizer built on oxipng, with GIF and WebP conversion"
+license = "MIT"
+publish = false
+
+[dependencies]
+# eframe's defaults without "default_fonts": egui's bundled Ubuntu Light and Hack fonts
+# (0.64 MiB). Inter covers the UI, and "system_fonts" finds anything else, such as emoji
+# and CJK in file names, among the system fonts.
+eframe = { version = "0.37", default-features = false, features = [
+    "accesskit",
+    "clipboard",
+    "links",
+    "persistence",
+    "system_fonts",
+    "wayland",
+    "wgpu",
+    "x11",
+] }
+egui = "0.37"
+egui_extras = "0.37"
+# Not used directly: keeps winit's default features (on Linux, loading Wayland at runtime and
+# Adwaita-style window decorations), which eframe only turns on through its own defaults.
+winit = "0.30"
+# Decoders for the formats converted to PNG/APNG before optimizing (pure Rust, MIT/Apache-2.0).
+gif = { version = "0.14", default-features = false, features = ["std"] }
+image-webp = "0.2"
+log = { version = "0.4", features = ["std"] }
+# Progress inference parses oxipng's log output, so stay on 10.2.x until the
+# log format has been re-verified with `cargo run --release --example log_probe`.
+oxipng = { version = "~10.2", default-features = false, features = ["parallel", "zopfli"] }
+# Writes the intermediate PNG/APNG for converted files; oxipng then optimizes it.
+png = "0.18"
+rayon = "1"
+rfd = "0.17"
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+
+[dev-dependencies]
+egui_kittest = { version = "0.37", features = ["eframe"] }
+tempfile = "3"
+
+[lints.rust]
+unsafe_code = "forbid"
+rust_2018_idioms = { level = "warn", priority = -1 }
+unused_qualifications = "warn"
+# Items only the crate uses are `pub(crate)` or narrower, so `pub` marks the library's API.
+unreachable_pub = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+# Lints are silenced with `#[expect]`, which warns once the lint no longer fires, and with a
+# reason. (Crate-wide `#![allow]`s in tests and examples are fine, with a reason.)
+allow_attributes = "warn"
+allow_attributes_without_reason = "warn"
+# Byte counts and durations are shown as floats; precision loss there is harmless.
+cast_precision_loss = "allow"
+module_name_repetitions = "allow"
+# egui UI code builds many small closures and long `ui` functions by nature.
+too_many_lines = "allow"
+dbg_macro = "warn"
+todo = "warn"
+unwrap_used = "warn"
+
+[profile.dev]
+opt-level = 1
+
+# oxipng, zopfli, and libdeflate are far too slow without optimizations,
+# which makes debug builds and tests painful.
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+opt-level = 3
+# Whole-program optimization across all crates, including oxipng and zopfli.
+lto = "fat"
+codegen-units = 1
+debug = false
+# Removes the symbol table and debug info from the binary (and skips the PDB on Windows).
+strip = "symbols"
+# Panics stay as unwinding (not "abort") so a crash while optimizing one file is reported on
+# that file instead of closing the app; see `runner::pump`. Stopping a file unwinds too.
+panic = "unwind"
+
+[patch.crates-io]
+# zopfli 0.8.4 with encoders that don't finish compressing while unwinding, so Stop is quick
+# during Zopfli passes. `bash vendor/update-zopfli.sh VERSION` moves it to another release;
+# vendor/README.md has the why, the update steps, and when to remove it.
+zopfli = { path = "vendor/zopfli" }
+
+[workspace]
+# The vendored crate is built, not linted or formatted with this project's rules.
+exclude = ["vendor"]
+
+[target."cfg(windows)".build-dependencies]
+winresource = { version = "0.1", default-features = false }

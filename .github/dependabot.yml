@@ -1,0 +1,27 @@
+# Weekly pull requests for newer GitHub Actions and crates. Rust itself is pinned in
+# rust-toolchain.toml and moved by hand.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+    # Patch releases come together in one pull request; minor and major ones each get their own,
+    # since egui's minor releases change its API.
+    groups:
+      patch:
+        update-types: [patch]
+    ignore:
+      # Progress parsing depends on oxipng's log output; see the note in Cargo.toml.
+      - dependency-name: oxipng
+        update-types: [version-update:semver-minor, version-update:semver-major]
+      # Vendored and patched; vendor/update-zopfli.sh moves it to a new release.
+      - dependency-name: zopfli
